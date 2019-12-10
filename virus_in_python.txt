@@ -1,5 +1,6 @@
 import os, stat
 import shutil
+import re
 drives=re.findall(r"[A-Z]+:.*$",os.popen("mountvol /").read(),re.MULTILINE)
 def remove_readonly(func, path, _):
     os.chmod(path, stat.S_IWRITE)
